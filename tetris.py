@@ -13,15 +13,36 @@ def gravity(cell): # 리스트를 분석해서 중력의 영향을 받는 '1'을
     for i in range(len(cell)-1, -1, -1):
         for j in range(len(cell[i])):
             if cell[i][j] == '1':
+                if cell[i] == cell[-1] or cell[i+1][j] == '2':
+                    print('log')
+                    cell = update_2d_list_values(cell, '1', '2')
+                    return cell
+
                 cell[i][j] = '0'
                 cell[i+1][j] = '1'
-
     return cell
+    
+def update_2d_list_values(list, old_value, new_value):
+    """
+    list의 old value 값을 전부 new value로 바꾸는 함수
+    """
+    for i in range(len(list)):
+        for j in range(len(list[i])):
+            if list[i][j] == old_value:
+                list[i][j] = new_value
+    return list
 
 making_block = 0
 
 while True:
     cell = gravity(cell)
+
+    making_block = 0
+    for i in cell:
+        for j in i:
+            if j == '1':
+                making_block = 1
+
 
     if making_block == 0:
         block = str(random.choice(block_list))
@@ -31,6 +52,7 @@ while True:
             for j in range(int(block[(i+1)*2 -1])): # 아오 머리 깨지겠네
                 cell[i][int(block[i*2])+j] = '1'
         making_block = 1
+    
 
     print("--------------")
     print(output(cell))
