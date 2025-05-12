@@ -1,13 +1,18 @@
 import time
 import random
+import keyboard
 
 # 20행 10열
 cell = [["0" for _ in range(10)] for _ in range(20)]
 
 block_list = [1321, 14, 1212, 2212, 1222, 1311, 1331]
+intended_time = 0
+start_time = time.time()
 
 def output(grid):
+    print("--------------")
     return '\n'.join(''.join(row) for row in grid)
+    print("--------------")
 
 def gravity(cell): # 리스트를 분석해서 중력의 영향을 받는 '1'을 한칸 아래로 떨굼
     for i in range(len(cell)-1, -1, -1):
@@ -35,7 +40,11 @@ def update_2d_list_values(list, old_value, new_value):
 making_block = 0
 
 while True:
-    cell = gravity(cell)
+    if intended_time <= time.time() - start_time:
+        cell = gravity(cell)
+        intended_time += 1.0
+        print(intended_time)
+        print(time.time() - start_time)
 
     making_block = 0
     for i in cell:
@@ -53,8 +62,5 @@ while True:
                 cell[i][int(block[i*2])+j] = '1'
         making_block = 1
     
-
-    print("--------------")
     print(output(cell))
-    print("--------------")
-    time.sleep(1)
+    time.sleep(0.01)
