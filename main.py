@@ -19,14 +19,32 @@ def gravity(cell): # 리스트를 분석해서 중력의 영향을 받는 '1'을
         for j in range(len(cell[i])):
             if cell[i][j] == '1':
                 if cell[i] == cell[-1] or cell[i+1][j] == '2':
-                    print('log')
+
                     cell = update_2d_list_values(cell, '1', '2')
                     return cell
 
                 cell[i][j] = '0'
                 cell[i+1][j] = '1'
     return cell
-    
+
+def horizontal_movement(cell_input, direction): 
+    """ 
+    "1"을  direction 방향으로 수평이동하는 함수, gravity랑 잘 섞어보려다 실패함
+    1은 왼쪽, -1은 오른쪽 
+    """
+    cell = cell_input
+
+    for i in range(len(cell)-1, -1, -1):
+        for j in range(len(cell[i])):
+            if cell[i][j*direction] == 1:
+                if j*direction != -direction or cell[i-direction][j*direction] != '2':
+                    cell[i-direction][j*direction] = '1'
+                    cell[i][j*direction] = '0'
+                else:
+                    return cell_input
+    return cell
+            
+
 def update_2d_list_values(list, old_value, new_value):
     """
     list의 old value 값을 전부 new value로 바꾸는 함수
@@ -36,6 +54,7 @@ def update_2d_list_values(list, old_value, new_value):
             if list[i][j] == old_value:
                 list[i][j] = new_value
     return list
+
 
 making_block = 0
 
@@ -62,5 +81,10 @@ while True:
                 cell[i][int(block[i*2])+j] = '1'
         making_block = 1
     
+    if keyboard.is_pressed('left'):
+        horizontal_movement(cell, 1)
+    if keyboard.is_pressed('right'):
+        horizontal_movement(cell, -1)
+
     print(output(cell))
     time.sleep(0.01)
